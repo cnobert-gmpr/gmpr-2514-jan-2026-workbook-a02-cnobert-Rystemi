@@ -45,6 +45,14 @@ public class IntroGame : Game
         base.Update(gameTime);
         
         _xPosition += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        int windowWidth = _graphics.PreferredBackBufferWidth;
+        float maxX = windowWidth - _width;
+        
+        if (_xPosition > maxX);
+        {
+            _xPosition = maxX;
+        }
     }
 
     protected override void Draw(GameTime gameTime)
