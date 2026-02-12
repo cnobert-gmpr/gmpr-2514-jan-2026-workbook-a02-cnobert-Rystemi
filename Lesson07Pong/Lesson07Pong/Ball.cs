@@ -6,11 +6,18 @@ namespace Lesson07Pong;
 
 public class Ball
 {
+    private const float _collisionTimerInterval = 0.4f;
+
     private Texture2D _texture;
     private Vector2 _position, _dimensions, _direction;
-    private float _speed;
+    private float _speed, _collisionTimer;
 
     private Rectangle _playAreaBoundingBox;
+    
+    internal Rectangle BoundingBox
+    {
+        get => new Rectangle(_position.ToPoint(), _dimensions.ToPoint());
+    }
 
     internal void Initialize(Vector2 position, Vector2 dimensions, Vector2 direction, float speed, Rectangle playAreaBoundingBox)
     {
@@ -30,6 +37,7 @@ public class Ball
      internal void Update(GameTime gameTime)
     {
         float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
+        _collisionTimer += dt;
 
         _position += _direction * _speed * dt;
 
@@ -50,6 +58,18 @@ public class Ball
     internal void Draw(SpriteBatch spriteBatch)
     {
         Rectangle ballRectangle = new Rectangle((int) _position.X, (int) _position.Y, (int) _dimensions.X, (int) _dimensions.Y);
+
         spriteBatch.Draw(_texture, ballRectangle, Color.White);
+    }
+    internal void ProcessCollision(Rectangle otherBoundingBox)
+    {
+        if(_collisionTimer >= _collisionTimerInterval && BoundingBox.Intersects(otherBoundingBox))
+        {
+            Rectangle intersection = Rectangle.Intersect(BoundingBox, otherBoundingBox);
+            if(intersection.Width > intersection.Height)
+            _direction.Y  *= -1;
+            else
+            _direction.X *= -1;
+        }
     }
 }

@@ -9,7 +9,16 @@ public class Paddle
     private Texture2D _texture;
     private Vector2 _position, _dimensions, _direction;
     private float _speed;
+
     private Rectangle _playAreaBoundingBox;
+
+    internal Rectangle BoundingBox
+    {
+        get
+        {
+            return new Rectangle(_position.ToPoint(), _dimensions.ToPoint());
+        }
+    }
 
     internal Vector2 Direction
     {
@@ -51,8 +60,5 @@ public class Paddle
     {
         Rectangle paddleRectangle = new Rectangle((int) _position.X, (int) _position.Y, (int) _dimensions.X, (int) _dimensions.Y);
         spriteBatch.Draw(_texture, paddleRectangle, Color.White);
-
-        // Rectangle paddleRectangleL = new Rectangle((int) _position.X, (int) _position.Y, (int) _dimensions.X, (int) _dimensions.Y);
-        // spriteBatch.Draw(_texture, paddleRectangleL, Color.White);
     }
 }
