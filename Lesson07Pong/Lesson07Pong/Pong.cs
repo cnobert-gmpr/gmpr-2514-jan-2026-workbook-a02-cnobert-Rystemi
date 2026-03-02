@@ -44,11 +44,12 @@ public class Pong : Game
 
         _ball = new Ball();
         _ball.Initialize(new Vector2(150,195), new Vector2 (21,21), new Vector2(-1,-1), 60, PlayAreaBoundingBox);
-
+        
         _paddleR = new Paddle();
-        _paddleL = new Paddle();
-        _paddleR.Initialize(new Vector2(690, 198), new Vector2(8, 124), Vector2.Zero, 150, PlayAreaBoundingBox);
-        _paddleL.Initialize(new Vector2(54, 198), new Vector2(8, 124), Vector2.Zero, 150, PlayAreaBoundingBox);
+        _paddleR.Initialize(new Vector2(690, 198), new Vector2(8, 124), 240, PlayAreaBoundingBox);
+        
+        _paddleL = new Paddle();        
+        _paddleL.Initialize(new Vector2(54, 198), new Vector2(8, 124), 240, PlayAreaBoundingBox);
 
         base.Initialize();
     }
@@ -65,24 +66,22 @@ public class Pong : Game
 
     protected override void Update(GameTime gameTime)
     {
-        #region keyboard input
+        #region Keyboard Input
         KeyboardState kbState = Keyboard.GetState();
-        if(kbState.IsKeyDown(Keys.Up)) 
+        if(kbState.IsKeyDown(Keys.Up))
             _paddleR.Direction = new Vector2(0, -1);
         else if(kbState.IsKeyDown(Keys.Down))
             _paddleR.Direction = new Vector2(0, 1);
         else
             _paddleR.Direction = Vector2.Zero;
 
-        if(kbState.IsKeyDown(Keys.W)) 
+        if(kbState.IsKeyDown(Keys.W))
             _paddleL.Direction = new Vector2(0, -1);
         else if(kbState.IsKeyDown(Keys.S))
             _paddleL.Direction = new Vector2(0, 1);
         else
             _paddleL.Direction = Vector2.Zero;
         #endregion
-
-
         _ball.Update(gameTime);
         _paddleR.Update(gameTime);
         _paddleL.Update(gameTime);
@@ -90,9 +89,6 @@ public class Pong : Game
         _ball.ProcessCollision(_paddleR.BoundingBox);
         _ball.ProcessCollision(_paddleL.BoundingBox);
 
-        _ball.Update(gameTime);
-        _paddleR.Update(gameTime);
-        _paddleL.Update(gameTime);
         base.Update(gameTime);
     }
 
@@ -107,7 +103,7 @@ public class Pong : Game
         _ball.Draw(_spriteBatch);
         _paddleR.Draw(_spriteBatch);
         _paddleL.Draw(_spriteBatch);
-        
+
         _spriteBatch.End();
 
         base.Draw(gameTime);
