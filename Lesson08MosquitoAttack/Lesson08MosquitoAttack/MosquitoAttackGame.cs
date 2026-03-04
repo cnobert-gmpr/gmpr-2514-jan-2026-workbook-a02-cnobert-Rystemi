@@ -6,8 +6,16 @@ namespace Lesson08MosquitoAttack;
 
 public class MosquitoAttackGame : Game
 {
+    private const int _WindowWidth = 550;
+    private const int _WindowHeight = 400;
+ 
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+
+    private Texture2D _background;
+    private SpriteFont _font;
+
+    Cannon _cannon;
 
     public MosquitoAttackGame()
     {
@@ -18,7 +26,12 @@ public class MosquitoAttackGame : Game
 
     protected override void Initialize()
     {
-        
+        _graphics.PreferredBackBufferWidth = _WindowWidth;
+        _graphics.PreferredBackBufferHeight = _WindowHeight;
+        _graphics.ApplyChanges();
+
+        _cannon = new Cannon();
+        _cannon.Initialize(new Vector2(50, 325));
 
         base.Initialize();
     }
@@ -27,11 +40,16 @@ public class MosquitoAttackGame : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        
+        _background = Content.Load<Texture2D>("Background");
+        _font = Content.Load<SpriteFont>("SystemArialFont");
+
+        _cannon.LoadContent(Content);
+
     }
 
     protected override void Update(GameTime gameTime)
     {
+        _cannon.Update(gameTime);
         
         base.Update(gameTime);
     }
@@ -40,7 +58,12 @@ public class MosquitoAttackGame : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        
+        _spriteBatch.Begin();
+        _spriteBatch.Draw(_background, Vector2.Zero, Color.White);
+
+        _cannon.Draw(_spriteBatch);
+
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }
