@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -6,8 +7,8 @@ namespace Lesson08MosquitoAttack;
 
 public class MosquitoAttackGame : Game
 {
-    private const int _WindowWidth = 550;
-    private const int _WindowHeight = 400;
+    private const int _WindowWidth = 550, _WindowHeight = 400;
+    private const int _NumMosquitoes = 10;
  
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
@@ -21,7 +22,7 @@ public class MosquitoAttackGame : Game
     private GameState _gameState;
 
     Cannon _cannon;
-    Mosquito _mosquito;
+    Mosquito[] _mosquitoes;
 
     private Rectangle BoundingBox
     {
@@ -44,8 +45,25 @@ public class MosquitoAttackGame : Game
         _cannon = new Cannon();
         _cannon.Initialize(new Vector2(50, 325), 150f);
 
-        _mosquito = new Mosquito();
-        _mosquito.Initialize( new Vector2 (50, 20), 200, new Vector2(-1, 0), BoundingBox);
+        
+        _mosquitoes = new Mosquito[_NumMosquitoes];
+        for (int c = 0; c < _NumMosquitoes; c++)
+        {
+            _mosquitoes[c] = new Mosquito();
+        }
+
+        Random random = new Random();
+        foreach (Mosquito mosquito in _mosquitoes)
+        {
+            // random.Next(1, 3) is inclusive; it includes the 1 but not the 3 
+            // It returns either 1 or 2
+            // if it returns 1, -1 is chosen, if it returns 2, then 1 is chosen 
+            int direction = random.Next(1, 3) == 2? -1: 1;
+            int xPosition = random.Next(1, _WindowWidth - 50);
+            int yPosition = random.Next(1, 151);
+            int speed = random.Next(150, 251);
+            mosquito.Initialize( new Vector2 (xPosition, yPosition), speed, new Vector2(direction, 0), BoundingBox);
+        }
 
         _gameState = GameState.Playing;
 
@@ -60,8 +78,10 @@ public class MosquitoAttackGame : Game
         _font = Content.Load<SpriteFont>("SystemArialFont");
 
         _cannon.LoadContent(Content);
-        _mosquito.LoadContent(Content);
-
+        foreach (Mosquito mosquito in _mosquitoes)
+        {
+            mosquito.LoadContent(Content);
+        }
     }
 
     protected override void Update(GameTime gameTime)
@@ -86,7 +106,10 @@ public class MosquitoAttackGame : Game
                     }
                 #endregion
                 _cannon.Update(gameTime);
-                _mosquito.Update(gameTime);
+                foreach (Mosquito mosquito in _mosquitoes)
+                {
+                    mosquito.Update(gameTime);
+                }
                 break;
             case GameState.Paused:
                 if (Pressed(Keys.P))
@@ -115,12 +138,18 @@ public class MosquitoAttackGame : Game
             case GameState.Playing:
                 _spriteBatch.Draw(_background, Vector2.Zero, Color.White);
                 _cannon.Draw(_spriteBatch);
-                _mosquito.Draw(_spriteBatch);
+                foreach (Mosquito mosquito in _mosquitoes)
+                {
+                    mosquito.Draw(_spriteBatch);
+                }
                 break;
             case GameState.Paused:
                 _spriteBatch.Draw(_background, Vector2.Zero, Color.Silver);
                 _cannon.Draw(_spriteBatch);
-                _mosquito.Draw(_spriteBatch);
+                foreach (Mosquito mosquito in _mosquitoes)
+                {
+                    mosquito.Draw(_spriteBatch);
+                }
                 _spriteBatch.DrawString(_font, _message, new Vector2 (125,175), Color.White);
                 break;
             case GameState.Over:
