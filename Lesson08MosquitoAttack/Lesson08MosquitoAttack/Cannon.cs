@@ -7,13 +7,14 @@ namespace Lesson08MosquitoAttack;
 
 public class Cannon
 {
+    private const int _NumCannonBalls = 10;
     private SimpleAnimation _animation;
     private Vector2 _position, _direction;
     private Point _dimensions;
     private float _speed;
     private Rectangle _gameBoundingBox;
 
-    private CannonBall _cBall;
+    private CannonBall[] _cBalls;
 
     internal Vector2 Direction
     {
@@ -29,14 +30,33 @@ public class Cannon
         }
     }
 
+    internal Rectangle BoundingBox
+    {
+        get
+        {
+            return new Rectangle(
+                (int)_position.X,
+                (int)_position.Y,
+                (int)_animation.FrameDimensions.X,
+                (int)_animation.FrameDimensions.Y
+            );
+        }
+    }
+
     internal void Initialize(Vector2 position, float speed, Rectangle gameBoundingBox)
     {
         _position = position;
         _speed = speed;
         _gameBoundingBox = gameBoundingBox;
 
-        _cBall = new CannonBall();
-        _cBall.Initialize(350, _gameBoundingBox);
+        _cBalls = new CannonBall[_NumCannonBalls];
+        for (int c = 0; c < _NumCannonBalls; c++)
+        {
+            _cBalls[c] = new CannonBall();
+            _cBalls[c].Initialize(150, _gameBoundingBox);
+        }
+
+        
     }
 
     internal void LoadContent(ContentManager content)
@@ -45,7 +65,9 @@ public class Cannon
         _dimensions = new Point(texture.Width / 4, texture.Height);
         _animation = new SimpleAnimation(texture, _dimensions.X, _dimensions.Y, 4, 2f);
 
-        _cBall.LoadContent(content);
+        foreach (CannonBall c in _cBalls)
+            c.LoadContent(content);
+        
     }
 
     internal void Update(GameTime gameTime)
@@ -55,18 +77,33 @@ public class Cannon
         if (_direction != Vector2.Zero)
             _animation.Update(gameTime);
         
-        _cBall.Update(gameTime);
+        foreach (CannonBall c in _cBalls)
+            c.Update(gameTime);
+        
     }
 
     internal void Draw(SpriteBatch spriteBatch)
     {
         if (_animation != null)
             _animation.Draw(spriteBatch, _position, SpriteEffects.None);
-        _cBall.Draw(spriteBatch);
+            foreach (CannonBall c in _cBalls)
+            c.Draw(spriteBatch);
+        
     }
 
     internal void Shoot()
     {
-        _cBall.Shoot(new Vector2(_position.X + 18, _position.Y), new Vector2(0, -1));
+        foreach (CannonBall c in _cBalls)
+        {
+            if (c.Launchable)
+                {
+                    float cannonBallPositionY = BoundingBox.Top - c.BoundingBox.Height;
+                    float cannonBallPositionX = BoundingBox.Center.X - c.BoundingBox.Width/2;
+                    Vector2 cannonPosition = new Vector2(cannonBallPositionX, cannonBallPositionY);
+                    c.Shoot(cannonPosition, new Vector2(0, -1));
+                    return; //break;
+                }
+        }
+        
     }
 }
