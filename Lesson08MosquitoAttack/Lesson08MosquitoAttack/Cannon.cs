@@ -106,4 +106,17 @@ public class Cannon
         }
         
     }
+
+    internal bool ProcessCollision(Rectangle boundingBox)
+    {
+        foreach (CannonBall c in _cBalls)
+        {
+            if (c.ProcessCollision(boundingBox))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
+ 
