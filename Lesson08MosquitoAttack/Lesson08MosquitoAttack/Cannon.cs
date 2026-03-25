@@ -53,7 +53,7 @@ public class Cannon
         for (int c = 0; c < _NumCannonBalls; c++)
         {
             _cBalls[c] = new CannonBall();
-            _cBalls[c].Initialize(150, _gameBoundingBox);
+            _cBalls[c].Initialize(200, _gameBoundingBox);
         }
 
         

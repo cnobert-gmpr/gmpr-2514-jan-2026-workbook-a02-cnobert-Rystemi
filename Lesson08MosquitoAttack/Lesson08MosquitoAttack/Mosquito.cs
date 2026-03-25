@@ -7,7 +7,7 @@ namespace Lesson08MosquitoAttack;
 
 public class Mosquito
 {
-    private SimpleAnimation _animationAlive, _animationPoofing;
+    private SimpleAnimation _animationAlive, _animationDying;
 
     private Vector2 _position;
     private Vector2 _direction;
@@ -49,7 +49,7 @@ public class Mosquito
         _animationAlive.Paused = false;
 
         texture = content.Load<Texture2D>("Poof"); 
-        _animationPoofing = new SimpleAnimation(texture, texture.Width / 8, texture.Height, 8, 4f);
+        _animationDying = new SimpleAnimation(texture, texture.Width / 8, texture.Height, 8, 4f);
     }
 
     internal void Update(GameTime gameTime)
@@ -69,7 +69,7 @@ public class Mosquito
                 _animationAlive.Update(gameTime);
                 break;
             case State.Dying:
-                _animationPoofing.Update(gameTime);
+                _animationDying.Update(gameTime);
                 break;
             case State.Dead:
                 break;
@@ -86,8 +86,8 @@ public class Mosquito
                 _animationAlive.Draw(spriteBatch, _position, SpriteEffects.None);
                 break;
             case State.Dying:
-                _animationPoofing.Draw(spriteBatch, _position, SpriteEffects.None);
-                if(_animationPoofing.DonePlayingOnce)
+                _animationDying.Draw(spriteBatch, _position, SpriteEffects.None);
+                if(_animationDying.DonePlayingOnce)
                 {
                     _state = State.Dead;
                 }
@@ -102,7 +102,7 @@ public class Mosquito
         if(Alive)
         {
             _state = State.Dying;
-            _animationPoofing.Looping = false;
+            _animationDying.Looping = false;
         }
             // _state = State.Dead;
     }
