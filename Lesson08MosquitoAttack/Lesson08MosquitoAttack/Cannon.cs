@@ -7,11 +7,7 @@ namespace Lesson08MosquitoAttack;
 public class Cannon : Actor
 {
     private const int _NumProjectiles = 5;
-
-    private Rectangle _gameBoundingBox;
-
-    private Projectile[] _projectiles;
-
+    
     internal Vector2 Direction
     {
         set

@@ -8,10 +8,6 @@ namespace Lesson08MosquitoAttack;
 public class Mosquito : Actor
 {
     private const int NumFireBalls = 10, UpperRandomFiringRange = 160;
-    private Rectangle _gameBoundingBox;
-
-    private enum State { Alive, Poofing, Dead }
-    private State _state;
 
     private FireBall[] _fireBalls;
     private Random _rng;

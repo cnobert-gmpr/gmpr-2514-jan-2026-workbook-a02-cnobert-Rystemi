@@ -9,6 +9,11 @@ public class Actor
     protected SimpleAnimation _animationAlive, _animationPoofing;
     protected Vector2 _position, _direction;
     protected float _speed;
+    protected Rectangle _gameBoundingBox;
+    protected Projectile[] _projectiles;
+
+    protected enum State { Alive, Poofing, Dead }
+    protected State _state;
 
     internal Rectangle BoundingBox
     {
