@@ -89,7 +89,7 @@ public class Player
             case State.Idle:
             case State.Walking:
                 SpriteEffects effect = _facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                _animationCurrent?.Draw(spriteBatch, _position, SpriteEffects.None);
+                _animationCurrent?.Draw(spriteBatch, _position, effect);
                 break;
         }
     }
@@ -134,7 +134,8 @@ public class Player
         {
             _position.Y = whatILandedOn.Top - _dimensions.Y + 1;
             _velocity.Y = 0;
-            _state = State.Walking;
+            _state = State.Idle;
+            _animationCurrent = _animationIdle;
         }
     }
 
